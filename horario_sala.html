@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários por Sala</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            background-image: url(./img/Wireframe\ -\ 2.png);
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: 50% -20vh;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #fff;
+        }
+
+        .navbar {
+            margin-top: 10px;
+            z-index: 10;
+            display: flex;
+        }
+
+        .navbar .nav-link {
+            color: #E84855 !important;
+            font-weight: bold;
+        }
+
+        table {
+            background-color: #fff;
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            margin-top: 50px;
+            text-align: center;
+            color: #E84855;
+        }
+
+        .d-flex {
+            display: flex !important;
+            justify-content: flex-end;
+        }
+
+        .btn+.btn {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="d-flex align-items-center">
+        <img src="./img/controle.png" alt="Logo Controle Acadêmico" height="200" style="border-radius: 50%;">
+        <h1 class="fs-4 text-white m-0" style="background-color: #E84855; width: 100%; padding: 10px;">
+            HORÁRIOS DA SALA
+        </h1>
+    </header>
+
+    <!-- Navbar separada -->
+    <nav class="navbar navbar-expand-lg bg-white">
+        <div class="container">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="index.html">INÍCIO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="salas.html">SALAS</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Tabela de horários -->
+    <main class="container mt-4">
+        <h1 id="titulo-sala">Horários</h1>
+        <table id="tabela-horarios">
+
+        </table>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const sala = urlParams.get('sala');
+        const tituloSala = document.getElementById('titulo-sala');
+        const tabelaHorarios = document.getElementById('tabela-horarios');
+
+        // Dados de horários para diferentes salas
+        const horarios = {
+
+            '100': [
+                ['08:00 - 09:00', 'Português', 'História', 'Matemática', 'História', 'Matemática'],
+                ['09:00 - 10:00', 'Matemática', 'Biologia', 'Geografia', 'Biologia', 'Geografia'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Geografia', 'Filosofia', 'Artes', 'Filosofia', 'Artes'],
+                ['11:15 - 12:15', 'Artes', 'Educação Física', 'Informática', 'Educação Física', 'Inglês'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Informática', 'Química', 'Química', 'Química', 'Informática']
+            ],
+            '101': [
+                ['08:00 - 09:00', 'Literatura', 'Educação Física', 'Matemática', 'Educação Física', 'Matemática'],
+                ['09:00 - 10:00', 'História', 'Física', 'Geografia', 'Física', 'Informática'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Artes', 'Sociologia', 'Filosofia', 'Inglês', 'Filosofia'],
+                ['11:15 - 12:15', 'Informática', 'Informática', 'Sociologia', 'Química', 'Química'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Biologia', 'Matemática', 'Artes', 'Matemática', 'Geografia']],
+            '102': [
+                ['08:00 - 09:00', 'Matemática', 'Química', 'Português', 'Química', 'Português'],
+                ['09:00 - 10:00', 'História', 'Educação Física', 'Geografia', 'Educação Física', 'Geografia'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Informática', 'Filosofia', 'Artes', 'Espanhol', 'Artes'],
+                ['11:15 - 12:15', 'Literatura', 'Sociologia', 'Inglês', 'Sociologia', 'Matemática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Biologia', 'Física', 'Informática', 'Física', 'Filosofia']],
+            '103': [
+                ['08:00 - 09:00', 'Português', 'Química', 'Matemática', 'Química', 'Matemática'],
+                ['09:00 - 10:00', 'Educação Física', 'Geografia', 'História', 'História', 'Educação Física'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Artes', 'Literatura', 'Filosofia', 'Literatura', 'Filosofia'],
+                ['11:15 - 12:15', 'Sociologia', 'Inglês', 'Sociologia', 'Espanhol', 'Informática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Física', 'Informática', 'Biologia', 'Biologia', 'Matemática']],
+            '104': [
+                ['08:00 - 09:00', 'Educação Física', 'Química', 'Português', 'Química', 'Educação Física'],
+                ['09:00 - 10:00', 'História', 'Matemática', 'Geografia', 'Português', 'Geografia'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Literatura', 'Filosofia', 'Artes', 'Filosofia', 'Artes'],
+                ['11:15 - 12:15', 'Inglês', 'Sociologia', 'Sociologia', 'Informática', 'Matemática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Biologia', 'Física', 'Física', 'Informática', 'Espanhol']],
+            '105': [
+                ['08:00 - 09:00', 'Português', 'Matemática', 'Química', 'Informática', 'Informática'],
+                ['09:00 - 10:00', 'Geografia', 'História', 'Educação Física', 'História', 'Química'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Filosofia', 'Artes', 'Literatura', 'Artes', 'Literatura'],
+                ['11:15 - 12:15', 'Sociologia', 'Matemática', 'Sociologia', 'Inglês', 'Matemática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Física', 'Biologia', 'Espanhol', 'Biologia', 'Educação Física']],
+            '106': [
+                ['08:00 - 09:00', 'Informática', 'Química', 'Português', 'Química', 'Português'],
+                ['09:00 - 10:00', 'História', 'Redação', 'Geografia', 'Biologia', 'Geografia'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Literatura', 'Filosofia', 'Artes', 'Filosofia', 'Artes'],
+                ['11:15 - 12:15', 'Redação', 'Sociologia', 'Matemática', 'Sociologia', 'Matemática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Educação Física', 'Física', 'Inglês', 'Física', 'Espanhol']
+            ],
+            '107': [
+                ['08:00 - 09:00', 'Português', 'Matemática', 'Química', 'Matemática', 'Química'],
+                ['09:00 - 10:00', 'Geografia', 'História', 'Informática', 'História', 'Redação'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'Filosofia', 'Artes', 'Literatura', 'Artes', 'Literatura'],
+                ['11:15 - 12:15', 'Sociologia', 'Redação', 'Sociologia', 'Inglês', 'Matemática'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', 'Física', 'Biologia', 'Educação Física', 'Biologia', 'Espanhol']],
+            'auditorio': [
+                ['08:00 - 09:00', 'Palestra Motivacional', 'Debate', 'Teatro', 'Exposição', 'Evento Cultural'],
+                ['09:00 - 10:00', 'Oficina de Cinema', 'Palestra Educação', 'Debate', 'Palestra Saúde', 'Apresentação Música'],
+                ['10:00 - 11:00', 'Apresentação Alunos', 'Cinema', 'Teatro', 'Exposição', 'Evento Cultural']
+            ],
+            'informatica': [
+                ['08:00 - 09:00', '3°A Ensino Médio', 'LIVRE', 'LIVRE', '2°B Ensino Médio', '2°B Ensino Médio'],
+                ['09:00 - 10:00', 'LIVRE', 'LIVRE', '3°B Ensino Médio', 'LIVRE', '9°B'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', '1°A Ensino Médio', 'LIVRE', 'LIVRE', 'LIVRE', 'LIVRE'],
+                ['11:15 - 12:15', '9°B', '9°B', '9°A', '2°A Ensino Médio', '1°B Ensino Médio'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', '9°A', '1°B Ensino Médio', '1°A Ensino Médio', '2°A Ensino Médio', '9°A']
+            ],
+            'quadra': [
+                ['08:00 - 09:00', '2°A Ensino Médio', '9°B', 'LIVRE', '9°B', '2°A Ensino Médio'],
+                ['09:00 - 10:00', '1°B Ensino Médio', '1°A Ensino Médio', '2°B Ensino Médio', '1°A Ensino Médio', '1°B Ensino Médio'],
+                ['10:00 - 10:15', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['10:15 - 11:15', 'LIVRE', 'LIVRE', 'LIVRE', 'LIVRE', 'LIVRE'],
+                ['11:15 - 12:15', 'LIVRE', '9°A', 'LIVRE', '9°A', 'LIVRE'],
+                ['12:15 - 13:00', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo', 'Intervalo'],
+                ['13:00 - 14:00', '3°A Ensino Médio', 'LIVRE', '3°B Ensino Médio', 'LIVRE', '2°B Ensino Médio']
+            ]
+        }
+
+
+
+        if (sala && horarios[sala]) {
+            tituloSala.textContent = `Horários da Sala ${sala}`;
+
+            let tableHTML = `
+                <thead>
+                    <tr>
+                        <th>Horário</th>
+                        <th>Segunda</th>
+                        <th>Terça</th>
+                        <th>Quarta</th>
+                        <th>Quinta</th>
+                        <th>Sexta</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            horarios[sala].forEach(linha => {
+                tableHTML += '<tr>';
+                linha.forEach(celula => {
+                    tableHTML += `<td>${celula}</td>`;
+                });
+                tableHTML += '</tr>';
+            });
+
+            tableHTML += '</tbody>';
+            tabelaHorarios.innerHTML = tableHTML;
+        } else {
+            tituloSala.textContent = 'Sala não encontrada';
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
